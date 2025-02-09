@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copper Store Management System</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --neu-shadow: 5px 5px 0px #000;
+            --neu-border: 3px solid #000;
+        }
+        
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: #f0f0f0;
+        }
+        
+        .neu-brutal {
+            background: white;
+            border: var(--neu-border);
+            box-shadow: var(--neu-shadow);
+            transition: all 0.2s;
+        }
+        
+        .neu-brutal:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 7px 7px 0px #000;
+        }
+        
+        .neu-button {
+            padding: 8px 16px;
+            background: #FFD700;
+            border: var(--neu-border);
+            box-shadow: var(--neu-shadow);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .neu-button:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 7px 7px 0px #000;
+        }
+        
+        .neu-input {
+            border: var(--neu-border);
+            padding: 8px;
+            width: 100%;
+        }
+        
+        .tab-active {
+            background: #FFD700;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-[#f0f0f0] p-4">
+    <div id="app">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <!-- Sidebar -->
+            <div class="neu-brutal p-4">
+                <h1 class="text-2xl font-bold mb-6">Copper Store</h1>
+                <nav class="space-y-2">
+                    <button @click="activeTab = 'dashboard'" :class="{'tab-active': activeTab === 'dashboard'}" class="w-full text-left p-2 neu-brutal">
+                        <i class="bi bi-speedometer2 mr-2"></i> Dashboard
+                    </button>
+                    <button @click="activeTab = 'inventory'" :class="{'tab-active': activeTab === 'inventory'}" class="w-full text-left p-2 neu-brutal">
+                        <i class="bi bi-box-seam mr-2"></i> Inventory
+                    </button>
+                    <button @click="activeTab = 'customers'" :class="{'tab-active': activeTab === 'customers'}" class="w-full text-left p-2 neu-brutal">
+                        <i class="bi bi-people mr-2"></i> Customers
+                    </button>
+                    <button @click="activeTab = 'invoices'" :class="{'tab-active': activeTab === 'invoices'}" class="w-full text-left p-2 neu-brutal">
+                        <i class="bi bi-receipt mr-2"></i> Invoices
+                    </button>
+                    <button @click="activeTab = 'reports'" :class="{'tab-active': activeTab === 'reports'}" class="w-full text-left p-2 neu-brutal">
+                        <i class="bi bi-graph-up mr-2"></i> Reports
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="md:col-span-4 space-y-4">
+                <!-- Top Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="neu-brutal p-4">
+                        <h3>Total Sales</h3>
+                        <p class="text-2xl font-bold">₹{{totalSales}}</p>
+                    </div>
+                    <div class="neu-brutal p-4">
+                        <h3>Total Stock</h3>
+                        <p class="text-2xl font-bold">{{totalStock}} kg</p>
+                    </div>
+                    <div class="neu-brutal p-4">
+                        <h3>Active Orders</h3>
+                        <p class="text-2xl font-bold">{{activeOrders}}</p>
+                    </div>
+                    <div class="neu-brutal p-4">
+                        <h3>Low Stock Items</h3>
+                        <p class="text-2xl font-bold text-red-500">{{lowStock}}</p>
+                    </div>
+                </div>
+
+                <!-- Content Area -->
+                <div class="neu-brutal p-4">
+                    <div v-if="activeTab === 'dashboard'">
+                        <h2 class="text-xl font-bold mb-4">Recent Activities</h2>
+                        <div class="space-y-2">
+                            <div v-for="activity in recentActivities" class="p-2 neu-brutal">
+                                <p>{{activity.description}}</p>
+                                <small>{{activity.time}}</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div v-if="activeTab === 'inventory'">
+                        <div class="flex justify-between mb-4">
+                            <h2 class="text-xl font-bold">Inventory Management</h2>
+                            <button class="neu-button">+ Add Item</button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr>
+                                        <th class="p-2 text-left neu-brutal">Item</th>
+                                        <th class="p-2 text-left neu-brutal">Stock</th>
+                                        <th class="p-2 text-left neu-brutal">Price/kg</th>
+                                        <th class="p-2 text-left neu-brutal">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="item in inventory">
+                                        <td class="p-2 neu-brutal">{{item.name}}</td>
+                                        <td class="p-2 neu-brutal">{{item.stock}} kg</td>
+                                        <td class="p-2 neu-brutal">₹{{item.price}}</td>
+                                        <td class="p-2 neu-brutal">
+                                            <button class="neu-button bg-blue-300">Edit</button>
+                                            <button class="neu-button bg-red-300 ml-2">Delete</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue
+
+        createApp({
+            data() {
+                return {
+                    activeTab: 'dashboard',
+                    totalSales: '1,24,500',
+                    totalStock: 1500,
+                    activeOrders: 12,
+                    lowStock: 3,
+                    recentActivities: [
+                        {description: 'New order #1234 received', time: '2 mins ago'},
+                        {description: 'Stock updated for Copper Wire', time: '15 mins ago'},
+                        {description: 'Payment received from ABC Corp', time: '1 hour ago'},
+                    ],
+                    inventory: [
+                        {name: 'Copper Wire', stock: 500, price: 750},
+                        {name: 'Copper Sheet', stock: 300, price: 850},
+                        {name: 'Copper Rod', stock: 200, price: 650},
+                    ]
+                }
+            }
+        }).mount('#app')
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>

@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --neu-shadow: 5px 5px 0px #000;
+  --neu-border: 3px solid #000;
+}
+
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background: #f0f0f0;
+}
+
+.neu-brutal {
+  background: white;
+  border: var(--neu-border);
+  box-shadow: var(--neu-shadow);
+  transition: all 0.2s;
+}
+
+.neu-brutal:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0px #000;
+}
+
+.neu-button {
+  padding: 8px 16px;
+  background: #FFD700;
+  border: var(--neu-border);
+  box-shadow: var(--neu-shadow);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.neu-button:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0px #000;
+}
+
+.neu-input {
+  border: var(--neu-border);
+  padding: 8px;
+  width: 100%;
+}
